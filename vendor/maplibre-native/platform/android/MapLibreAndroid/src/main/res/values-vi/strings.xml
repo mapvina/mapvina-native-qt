@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mapvina_compassContentDescription">La bàn bản đồ. Kích hoạt để quay bản đồ lại hướng bắc.</string>
+    <string name="mapvina_attributionsIconContentDescription">Biểu tượng ghi công. Kích hoạt để xem hộp thoại ghi công.</string>
+    <string name="mapvina_myLocationViewContentDescription">Cái chỉ vị trí. Cái này chỉ vị trí của bạn trên bản đồ.</string>
+    <string name="mapvina_mapActionDescription">Đang xem bản đồ được xây dựng dùng MapVina. Kéo hai ngón tay để cuộn. Chụm các ngón tay lại để phóng to. Tách các ngón tay ra để thu nhỏ.</string>
+    <string name="mapvina_attributionsDialogTitle">MapVina Android</string>
+    <string name="mapvina_attributionErrorNoBrowser">Không thể mở trang Web vì thiết bị thiếu trình duyệt.</string>
+    <string name="mapvina_offline_error_region_definition_invalid">OfflineRegionDefinition được cung cấp không vừa thế giới: %s</string>
+    </resources>

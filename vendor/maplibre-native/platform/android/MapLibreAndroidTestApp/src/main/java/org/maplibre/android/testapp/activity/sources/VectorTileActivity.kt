@@ -1,0 +1,85 @@
+package com.mapvina.android.testapp.activity.sources
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.mapvina.android.camera.CameraUpdateFactory
+import com.mapvina.android.geometry.LatLngBounds
+import com.mapvina.android.maps.MapView
+import com.mapvina.android.style.layers.LineLayer
+import com.mapvina.android.style.layers.PropertyFactory.lineColor
+import com.mapvina.android.style.layers.PropertyFactory.lineWidth
+import com.mapvina.android.style.sources.TileSet
+import com.mapvina.android.style.sources.VectorSource
+import com.mapvina.android.testapp.R
+import com.mapvina.android.testapp.styles.TestStyles
+
+
+class VectorTileActivity : AppCompatActivity() {
+    private lateinit var mapView: MapView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_vector_tile)
+        mapView = findViewById<MapView>(R.id.mapView)
+
+        mapView.getMapAsync {
+            it.animateCamera(
+                CameraUpdateFactory.newLatLngBounds(
+                    // z: 12, x: 2177, y: 1436 is one of the available tiles:
+                    // https://github.com/mapvina/demotiles/tree/gh-pages/tiles-omt/12/2177
+                    LatLngBounds.from(12, 2177, 1436),
+                    0
+                )
+            )
+            it.setStyle(TestStyles.PROTOMAPS_GRAYSCALE) { style ->
+                // --8<-- [start:addTileSet]
+                val tileset = TileSet(
+                    "openmaptiles",
+                    "https://demotiles.mapvina.com/tiles-omt/{z}/{x}/{y}.pbf"
+                )
+                val openmaptiles = VectorSource("openmaptiles", tileset)
+                style.addSource(openmaptiles)
+                val roadLayer = LineLayer("road", "openmaptiles").apply {
+                    setSourceLayer("transportation")
+                    setProperties(
+                        lineColor("red"),
+                        lineWidth(2.0f)
+                    )
+                }
+                // --8<-- [end:addTileSet]
+
+                style.addLayer(roadLayer)
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView.onStop()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
+}

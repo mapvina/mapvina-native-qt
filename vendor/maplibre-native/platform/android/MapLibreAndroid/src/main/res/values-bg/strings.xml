@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mapvina_compassContentDescription">Компас на картата. Активирай, за да насочиш картата на север.</string>
+    <string name="mapvina_attributionsIconContentDescription">Иконка функции. Активирай, за да покажеш диалог функции.</string>
+    <string name="mapvina_myLocationViewContentDescription">Изглед локация. Това показва местоположението ти на картата.</string>
+    <string name="mapvina_mapActionDescription">Показва карта създадена с MapVina. Скролни с два пръста. Мащабирай с два пръста.</string>
+    <string name="mapvina_attributionsDialogTitle">MapVina Android</string>
+    <string name="mapvina_offline_error_region_definition_invalid">Предоставените OfflineRegionDefinition не пасват в границите на света: %s</string>
+
+    </resources>

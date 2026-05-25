@@ -1,0 +1,37 @@
+if(TARGET mbgl-vendor-csscolorparser)
+    return()
+endif()
+
+if(MLN_WITH_QT OR MLN_CORE_INCLUDE_DEPS)
+    add_library(mbgl-vendor-csscolorparser OBJECT)
+else()
+    add_library(mbgl-vendor-csscolorparser STATIC)
+endif()
+
+target_sources(
+    mbgl-vendor-csscolorparser PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/csscolorparser/csscolorparser.cpp
+)
+
+target_link_libraries(
+    mbgl-vendor-csscolorparser
+    PRIVATE mbgl-compiler-options
+)
+
+target_include_directories(
+    mbgl-vendor-csscolorparser SYSTEM
+    PUBLIC ${CMAKE_CURRENT_LIST_DIR}/csscolorparser
+)
+
+if(MSVC)
+    target_compile_options(mbgl-vendor-csscolorparser PRIVATE /wd4244)
+endif()
+
+set_target_properties(
+    mbgl-vendor-csscolorparser
+    PROPERTIES
+        INTERFACE_MAPVINA_NAME "csscolorparser"
+        INTERFACE_MAPVINA_URL "https://github.com/mapbox/css-color-parser-cpp"
+        INTERFACE_MAPVINA_AUTHOR "Dean McNamee and Konstantin Käfer"
+        INTERFACE_MAPVINA_LICENSE ${CMAKE_CURRENT_LIST_DIR}/csscolorparser/LICENSE
+)

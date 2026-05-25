@@ -1,0 +1,1 @@
+# mapvina-native-qt

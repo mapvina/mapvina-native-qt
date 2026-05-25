@@ -1,0 +1,355 @@
+name: Linux CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - "**"
+    paths-ignore:
+      - ".gitignore"
+      - "README.md"
+      - "docs/**"
+      # ignore CI for other platforms
+      - ".github/FUNDING.yml"
+      - ".github/workflows/Android.yml"
+      - ".github/workflows/CI-cache-cleanup.yml"
+      - ".github/workflows/docs-test.yml"
+      - ".github/workflows/gh-pages-docs.yml"
+      - ".github/workflows/iOS.yml"
+      - ".github/workflows/macOS.yml"
+      - ".github/workflows/source-tarball.yml"
+      - ".github/workflows/WASM.yml"
+      - ".github/workflows/Windows.yml"
+      - "cmake/presets/Android.json"
+      - "cmake/presets/iOS.json"
+      - "cmake/presets/macOS.json"
+      - "cmake/presets/WASM.json"
+      - "cmake/presets/Windows.json"
+
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".gitignore"
+      - "README.md"
+      - "docs/**"
+      # ignore CI for other platforms
+      - ".github/FUNDING.yml"
+      - ".github/workflows/Android.yml"
+      - ".github/workflows/CI-cache-cleanup.yml"
+      - ".github/workflows/docs-test.yml"
+      - ".github/workflows/gh-pages-docs.yml"
+      - ".github/workflows/iOS.yml"
+      - ".github/workflows/macOS.yml"
+      - ".github/workflows/source-tarball.yml"
+      - ".github/workflows/WASM.yml"
+      - ".github/workflows/Windows.yml"
+      - "cmake/presets/Android.json"
+      - "cmake/presets/iOS.json"
+      - "cmake/presets/macOS.json"
+      - "cmake/presets/WASM.json"
+      - "cmake/presets/Windows.json"
+
+concurrency:
+  # cancel jobs on PRs only
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  id-token: write # needed for AWS
+
+jobs:
+  build-and-test:
+    name: Build (Qt${{ matrix.qt_version }}, ${{ matrix.host }} ${{ matrix.renderer }}, ${{ matrix.compiler }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - qt_version: 6.10.2
+            host: linux
+            runner: ubuntu-24.04
+            preset: Linux-OpenGL-sccache-CI
+            renderer: OpenGL
+            compiler: default
+          - qt_version: 6.10.2
+            host: linux_arm64
+            runner: ubuntu-24.04-arm
+            preset: Linux-OpenGL-sccache-CI
+            renderer: OpenGL
+            compiler: gcc
+          - qt_version: 6.10.2
+            host: linux
+            runner: ubuntu-24.04
+            preset: Linux-Vulkan-sccache-CI
+            renderer: Vulkan
+            compiler: default
+          - qt_version: 6.10.2
+            host: linux_arm64
+            runner: ubuntu-24.04-arm
+            preset: Linux-Vulkan-sccache-CI
+            renderer: Vulkan
+            compiler: gcc
+          - qt_version: 6.11.0
+            host: linux
+            runner: ubuntu-24.04
+            preset: Linux-OpenGL-sccache-CI
+            renderer: OpenGL
+            compiler: default
+          - qt_version: 6.11.0
+            host: linux_arm64
+            runner: ubuntu-24.04-arm
+            preset: Linux-OpenGL-sccache-CI
+            renderer: OpenGL
+            compiler: gcc
+          - qt_version: 6.11.0
+            host: linux
+            runner: ubuntu-24.04
+            preset: Linux-Vulkan-sccache-CI
+            renderer: Vulkan
+            compiler: default
+          - qt_version: 6.11.0
+            host: linux_arm64
+            runner: ubuntu-24.04-arm
+            preset: Linux-Vulkan-sccache-CI
+            renderer: Vulkan
+            compiler: gcc
+          - qt_version: 6.11.0
+            host: linux
+            runner: ubuntu-24.04
+            preset: Linux-OpenGL-coverage
+            renderer: OpenGL
+            compiler: gcc-14
+            gcov: gcov-14
+          - qt_version: 6.11.0
+            host: linux
+            runner: ubuntu-24.04
+            preset: Linux-OpenGL-clang-tidy
+            renderer: OpenGL
+            compiler: llvm
+          - qt_version: 6.11.0
+            host: linux
+            runner: ubuntu-24.04
+            preset: Linux-Vulkan-clang-tidy
+            renderer: Vulkan
+            compiler: llvm
+
+    env:
+      PRESET: ${{ matrix.preset }}
+
+    steps:
+      - name: Configure AWS Credentials
+        if: vars.OIDC_AWS_ROLE_TO_ASSUME
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-region: us-west-2
+          role-to-assume: ${{ vars.OIDC_AWS_ROLE_TO_ASSUME }}
+          role-session-name: ${{ github.run_id }}
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          path: source
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install sccache
+        uses: ./source/.github/actions/install-sccache
+        with:
+          arch: ${{ matrix.host }}
+
+      - name: Configure sccache
+        run: |
+          {
+            echo "SCCACHE_BUCKET=mapvina-native-sccache"
+            echo "SCCACHE_REGION=eu-central-1"
+          } >> "$GITHUB_ENV"
+          if [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
+            echo "AWS_SECRET_ACCESS_KEY not set; not uploading sccache cache to S3"
+            echo "SCCACHE_S3_NO_CREDENTIALS=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Install test dependencies
+        if: matrix.compiler != 'default'
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            libxkbcommon-x11-0 \
+            libxcb-cursor0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0 \
+            libegl1
+
+      - name: Install compiler
+        id: install_compiler
+        if: matrix.compiler != 'default' && matrix.compiler != 'llvm'
+        uses: rlalik/setup-cpp-compiler@master
+        with:
+          compiler: ${{ matrix.compiler }}
+
+      - name: Install LLVM
+        id: install_llvm
+        if: matrix.compiler == 'llvm'
+        run: |
+          llvm_version="21"
+          tmpdir="$(mktemp -d)"
+          cd "$tmpdir"
+          curl -fsSL https://apt.llvm.org/llvm.sh -o llvm.sh
+          chmod +x llvm.sh
+          # Set DPKG_FORCE to overwrite because the packages may conflict with the
+          # pre-installed ones from the GitHub Actions runner image.
+          sudo env DPKG_FORCE=overwrite ./llvm.sh "$llvm_version" all
+          rm -rf -- "$tmpdir"
+
+          echo "CLANG_TIDY_PATH=/usr/lib/llvm-${llvm_version}/bin" >> "$GITHUB_ENV"
+          echo "cc=clang-${llvm_version}" >> "$GITHUB_OUTPUT"
+          echo "cxx=clang++-${llvm_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Install lcov
+        if: matrix.compiler != 'default' && matrix.compiler != 'llvm'
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            libcapture-tiny-perl \
+            libdatetime-perl \
+            libdatetime-format-dateparse-perl \
+            libgd-perl \
+            libgd3 \
+            libjbig0 \
+            libjpeg-turbo8 \
+            libjpeg8 \
+            libjson-perl \
+            libperlio-gzip-perl \
+            libtiff6 \
+            libwebp7
+
+          git clone https://github.com/linux-test-project/lcov.git -b v2.3.2
+          pushd lcov
+          sudo make -j$(nproc) install
+          popd
+          rm -rf lcov
+
+      - name: Download Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          aqtversion: ==3.3.*
+          version: ${{ matrix.qt_version }}
+          dir: ${{ github.workspace }}
+          host: ${{ matrix.host }}
+          target: desktop
+          modules: qtlocation qtpositioning
+
+      - name: Setup ninja
+        if: matrix.compiler != 'default'
+        uses: seanmiddleditch/gha-setup-ninja@v6
+
+      - name: Build (Qt6, CentOS 9, GCC11)
+        if: matrix.compiler == 'default'
+        uses: ./source/.github/actions/qt6-build
+        with:
+          preset: ${{ matrix.preset }}
+          renderer: ${{ matrix.renderer }}
+
+      - name: Build (Qt6, custom compiler)
+        if: matrix.compiler != 'default'
+        env:
+          CC: ${{ steps.install_compiler.outputs.cc || steps.install_llvm.outputs.cc }}
+          CXX: ${{ steps.install_compiler.outputs.cxx || steps.install_llvm.outputs.cxx }}
+          GCOV: ${{ matrix.gcov }}
+        working-directory: source
+        run: |
+          export GCOV_PATH="$(which ${GCOV})"
+          export CMAKE_MAKE_PROGRAM="$(which ninja)"
+          cmake --workflow --preset ${PRESET}
+
+      - name: Run tests
+        if: matrix.compiler != 'default' && !(matrix.host == 'linux_arm64' && matrix.renderer == 'Vulkan') && !(matrix.compiler == 'llvm' && matrix.renderer == 'Vulkan')
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: ctest --output-on-failure
+          working-directory: build/qt6-Linux-${{ matrix.renderer }}
+
+      - name: Run code coverage
+        if: matrix.compiler != 'default' && matrix.preset == 'Linux-OpenGL-coverage'
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: ninja coverage
+          working-directory: build/qt6-Linux-${{ matrix.renderer }}
+
+      - name: Install
+        if: matrix.compiler != 'default' && matrix.preset != 'Linux-OpenGL-coverage'
+        run: |
+          mkdir install && cd install
+          tar xf ../build/qt6-Linux-${{ matrix.renderer }}/mapvina-native-qt_*.tar.bz2
+          mv mapvina-native-qt_* mapvina-native-qt
+
+      - name: Build QtQuick Example
+        if: matrix.compiler != 'default' && matrix.preset != 'Linux-OpenGL-coverage'
+        working-directory: source/examples/quick
+        run: |
+          export QMapVina_DIR="$GITHUB_WORKSPACE/install/mapvina-native-qt"
+          cmake --workflow --preset default
+
+      - name: Build QtQuick Standalone Example
+        if: matrix.compiler != 'default' && matrix.preset != 'Linux-OpenGL-coverage'
+        working-directory: source/examples/quick-standalone
+        run: |
+          export QMapVina_DIR="$GITHUB_WORKSPACE/install/mapvina-native-qt"
+          cmake --workflow --preset default
+
+      - name: Build QtWidgets Example
+        if: matrix.compiler != 'default' && matrix.preset != 'Linux-OpenGL-coverage'
+        working-directory: source/examples/widgets
+        run: |
+          export QMapVina_DIR="$GITHUB_WORKSPACE/install/mapvina-native-qt"
+          cmake --workflow --preset default
+
+      - name: Show sccache stats
+        if: matrix.compiler != 'default'
+        run: sccache --show-stats
+
+      - name: Upload installation
+        if: matrix.compiler == 'default'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.host }}_${{ matrix.qt_version }}_${{ matrix.renderer }}
+          path: build/qt6-Linux-${{ matrix.renderer }}/mapvina-native-qt_*.tar.bz2
+
+      - name: Upload coverage reports to Codecov
+        if: matrix.compiler != 'default' && matrix.preset == 'Linux-OpenGL-coverage'
+        uses: codecov/codecov-action@v6
+        with:
+          files: build/qt6-Linux-${{ matrix.renderer }}/coverage.info
+          verbose: true
+
+  release:
+    name: Release
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-24.04
+    needs: build-and-test
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        qt_version: [6.10.2, 6.11.0]
+        renderer: [OpenGL, Vulkan]
+        host: [linux, linux_arm64]
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ matrix.host }}_${{ matrix.qt_version }}_${{ matrix.renderer }}
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: mapvina-native-qt_${{ github.ref_name }}_Qt${{ matrix.qt_version }}_${{ matrix.host }}_${{ matrix.renderer }}.tar.bz2
+          allowUpdates: true
+          draft: true

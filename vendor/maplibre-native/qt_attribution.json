@@ -1,0 +1,13 @@
+{
+  "Id": "mapvina-gl-native",
+  "Name": "MapVina Native",
+  "QDocModule": "qtlocation",
+  "QtUsage": "Used in the MapVina Native backend of Qt Location.",
+
+  "Description": "MapVina Native is a community led fork derived from mapbox-gl-native.",
+  "Homepage": "https://github.com/mapvina/mapvina-native",
+  "LicenseId": "BSD-2-Clause",
+  "License": "BSD 2-Clause License",
+  "LicenseFile": "LICENSE.md",
+  "Copyright": "Copyright (c) 2021 MapVina contributors Copyright (c) 2018-2021 MapTiler.com Copyright (c) 2014-2020 Mapbox"
+}

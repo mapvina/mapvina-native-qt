@@ -1,0 +1,207 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- these are public -->
+    <declare-styleable name="mapvina_MapView" >
+
+        <!--DEPRECATED use mapvina_apiBaseUri instead -->
+        <attr name="mapvina_apiBaseUrl" format="string"/>
+
+        <!--Configuration-->
+        <attr name="mapvina_apiBaseUri" format="string"/>
+        <attr name="mapvina_localIdeographEnabled" format="boolean"/>
+        <attr name="mapvina_localIdeographFontFamily" format="string"/>
+        <attr name="mapvina_localIdeographFontFamilies" format="reference"/>
+        <attr name="mapvina_cross_source_collisions" format="boolean"/>
+
+        <!--Action Journal-->
+        <attr name="mapvina_actionJournalEnabled" format="boolean"/>
+        <attr name="mapvina_actionJournalLogFileSize" format="integer"/>
+        <attr name="mapvina_actionJournalLogFileCount" format="integer"/>
+        <attr name="mapvina_actionJournalRenderingReportInterval" format="integer"/>
+
+        <!--Camera-->
+        <attr name="mapvina_cameraTargetLat" format="float"/>
+        <attr name="mapvina_cameraTargetLng" format="float"/>
+        <attr name="mapvina_cameraZoom" format="float"/>
+        <attr name="mapvina_cameraBearing" format="float"/>
+        <attr name="mapvina_cameraTilt" format="float"/>
+
+        <!--Zoom-->
+        <attr name="mapvina_cameraZoomMax" format="float"/>
+        <attr name="mapvina_cameraZoomMin" format="float"/>
+
+        <!--Pitch-->
+        <attr name="mapvina_cameraPitchMax" format="float"/>
+        <attr name="mapvina_cameraPitchMin" format="float"/>
+
+        <!--Gestures-->
+        <attr name="mapvina_uiZoomGestures" format="boolean"/>
+        <attr name="mapvina_uiScrollGestures" format="boolean"/>
+        <attr name="mapvina_uiHorizontalScrollGestures" format="boolean"/>
+        <attr name="mapvina_uiRotateGestures" format="boolean"/>
+        <attr name="mapvina_uiTiltGestures" format="boolean"/>
+        <attr name="mapvina_uiDoubleTapGestures" format="boolean"/>
+        <attr name="mapvina_uiQuickZoomGestures" format="boolean"/>
+
+        <!--Compass-->
+        <attr name="mapvina_uiCompass" format="boolean"/>
+        <attr name="mapvina_uiCompassGravity">
+            <flag name="top" value="0x30"/>
+            <flag name="bottom" value="0x50"/>
+            <flag name="left" value="0x03"/>
+            <flag name="right" value="0x05"/>
+            <flag name="center_vertical" value="0x10"/>
+            <flag name="fill_vertical" value="0x70"/>
+            <flag name="center_horizontal" value="0x01"/>
+            <flag name="fill_horizontal" value="0x07"/>
+            <flag name="center" value="0x11"/>
+            <flag name="fill" value="0x77"/>
+            <flag name="clip_vertical" value="0x80"/>
+            <flag name="clip_horizontal" value="0x08"/>
+            <flag name="start" value="0x00800003"/>
+            <flag name="end" value="0x00800005"/>
+        </attr>
+        <attr name="mapvina_uiCompassMarginLeft" format="dimension"/>
+        <attr name="mapvina_uiCompassMarginTop" format="dimension"/>
+        <attr name="mapvina_uiCompassMarginRight" format="dimension"/>
+        <attr name="mapvina_uiCompassMarginBottom" format="dimension"/>
+        <attr name="mapvina_uiCompassFadeFacingNorth" format="boolean"/>
+        <attr name="mapvina_uiCompassDrawable" format="reference"/>
+
+        <!--Logo-->
+        <attr name="mapvina_uiLogo" format="boolean"/>
+        <attr name="mapvina_uiLogoGravity">
+            <flag name="top" value="0x30"/>
+            <flag name="bottom" value="0x50"/>
+            <flag name="left" value="0x03"/>
+            <flag name="right" value="0x05"/>
+            <flag name="center_vertical" value="0x10"/>
+            <flag name="fill_vertical" value="0x70"/>
+            <flag name="center_horizontal" value="0x01"/>
+            <flag name="fill_horizontal" value="0x07"/>
+            <flag name="center" value="0x11"/>
+            <flag name="fill" value="0x77"/>
+            <flag name="clip_vertical" value="0x80"/>
+            <flag name="clip_horizontal" value="0x08"/>
+            <flag name="start" value="0x00800003"/>
+            <flag name="end" value="0x00800005"/>
+        </attr>
+        <attr name="mapvina_uiLogoMarginLeft" format="dimension"/>
+        <attr name="mapvina_uiLogoMarginTop" format="dimension"/>
+        <attr name="mapvina_uiLogoMarginRight" format="dimension"/>
+        <attr name="mapvina_uiLogoMarginBottom" format="dimension"/>
+
+        <!--Attribution-->
+        <attr name="mapvina_uiAttribution" format="boolean"/>
+        <attr name="mapvina_uiAttributionGravity">
+            <flag name="top" value="0x30"/>
+            <flag name="bottom" value="0x50"/>
+            <flag name="left" value="0x03"/>
+            <flag name="right" value="0x05"/>
+            <flag name="center_vertical" value="0x10"/>
+            <flag name="fill_vertical" value="0x70"/>
+            <flag name="center_horizontal" value="0x01"/>
+            <flag name="fill_horizontal" value="0x07"/>
+            <flag name="center" value="0x11"/>
+            <flag name="fill" value="0x77"/>
+            <flag name="clip_vertical" value="0x80"/>
+            <flag name="clip_horizontal" value="0x08"/>
+            <flag name="start" value="0x00800003"/>
+            <flag name="end" value="0x00800005"/>
+        </attr>
+        <attr name="mapvina_uiAttributionMarginLeft" format="dimension"/>
+        <attr name="mapvina_uiAttributionMarginTop" format="dimension"/>
+        <attr name="mapvina_uiAttributionMarginRight" format="dimension"/>
+        <attr name="mapvina_uiAttributionMarginBottom" format="dimension"/>
+        <attr name="mapvina_uiAttributionTintColor" format="color"/>
+
+        <!-- Use TextureView-->
+        <attr name="mapvina_renderTextureMode" format="boolean"/>
+        <attr name="mapvina_renderTextureTranslucentSurface" format="boolean"/>
+        <attr name="mapvina_foregroundLoadColor" format="color"/>
+
+        <attr name="mapvina_enableTilePrefetch" format="boolean"/>
+        <attr name="mapvina_prefetchZoomDelta" format="integer"/>
+        <attr name="mapvina_enableZMediaOverlay" format="boolean"/>
+        <attr name="mapvina_pixelRatio" format="float"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="mapvina_BubbleLayout">
+        <attr name="mapvina_bl_arrowWidth" format="dimension|reference"/>
+        <attr name="mapvina_bl_cornersRadius" format="dimension|reference"/>
+        <attr name="mapvina_bl_arrowHeight" format="dimension|reference"/>
+        <attr name="mapvina_bl_arrowPosition" format="dimension|reference"/>
+        <attr name="mapvina_bl_bubbleColor" format="color|reference"/>
+        <attr name="mapvina_bl_strokeWidth" format="dimension|reference"/>
+        <attr name="mapvina_bl_strokeColor" format="color|reference"/>
+
+        <attr name="mapvina_bl_arrowDirection" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+            <enum name="top" value="2"/>
+            <enum name="bottom" value="3"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="mapvina_LocationComponent">
+        <attr name="mapvina_foregroundDrawable" format="reference"/>
+        <attr name="mapvina_foregroundTintColor" format="color"/>
+        <attr name="mapvina_backgroundDrawable" format="reference"/>
+        <attr name="mapvina_backgroundTintColor" format="color"/>
+        <attr name="mapvina_bearingDrawable" format="reference"/>
+        <attr name="mapvina_bearingTintColor" format="color"/>
+        <attr name="mapvina_gpsDrawable" format="reference"/>
+
+        <attr name="mapvina_foregroundDrawableStale" format="reference"/>
+        <attr name="mapvina_foregroundStaleTintColor" format="color"/>
+        <attr name="mapvina_backgroundDrawableStale" format="reference"/>
+        <attr name="mapvina_backgroundStaleTintColor" format="color"/>
+
+        <attr name="mapvina_accuracyAlpha" format="float"/>
+        <attr name="mapvina_accuracyColor" format="color"/>
+
+        <attr name="mapvina_elevation" format="dimension"/>
+
+        <!-- Stale state -->
+        <attr name="mapvina_enableStaleState" format="boolean"/>
+        <attr name="mapvina_staleStateTimeout" format="integer" min="0"/>
+
+        <!-- Location icon padding -->
+        <attr name="mapvina_iconPaddingLeft" format="integer"/>
+        <attr name="mapvina_iconPaddingTop" format="integer"/>
+        <attr name="mapvina_iconPaddingRight" format="integer"/>
+        <attr name="mapvina_iconPaddingBottom" format="integer"/>
+
+        <!-- Map layer configuration -->
+        <attr name="mapvina_layer_above" format="string"/>
+        <attr name="mapvina_layer_below" format="string"/>
+
+        <!-- Icon scale based on map zoom levels -->
+        <attr name="mapvina_maxZoomIconScale" format="float"/>
+        <attr name="mapvina_minZoomIconScale" format="float"/>
+
+        <!-- Camera tracking settings -->
+        <attr name="mapvina_trackingGesturesManagement" format="boolean"/>
+        <attr name="mapvina_trackingInitialMoveThreshold" format="dimension"/>
+        <attr name="mapvina_trackingMultiFingerMoveThreshold" format="dimension"/>
+
+        <!-- Animation duration multiplier -->
+        <attr name="mapvina_trackingAnimationDurationMultiplier" format="float" />
+
+        <!-- Compass animation -->
+        <attr name="mapvina_compassAnimationEnabled" format="boolean" />
+
+        <!-- Accuracy animation-->
+        <attr name="mapvina_accuracyAnimationEnabled" format="boolean" />
+
+        <!-- Pulsing circle -->
+        <attr name="mapvina_pulsingLocationCircleEnabled" format="boolean" />
+        <attr name="mapvina_pulsingLocationCircleFadeEnabled" format="boolean" />
+        <attr name="mapvina_pulsingLocationCircleColor" format="color" />
+        <attr name="mapvina_pulsingLocationCircleDuration" format="float" />
+        <attr name="mapvina_pulsingLocationCircleRadius" format="float" />
+        <attr name="mapvina_pulsingLocationCircleAlpha" format="float" />
+        <attr name="mapvina_pulsingLocationCircleInterpolator" format="string" />
+
+    </declare-styleable>
+</resources>

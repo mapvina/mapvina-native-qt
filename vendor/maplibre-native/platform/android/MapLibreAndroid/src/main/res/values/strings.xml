@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mapvina_compassContentDescription">Map compass. Activate to reset the map rotation to North.</string>
+    <string name="mapvina_attributionsIconContentDescription">Attribution icon. Activate to show attribution dialog.</string>
+    <string name="mapvina_myLocationViewContentDescription">Location View. This shows your location on the map.</string>
+    <string name="mapvina_mapActionDescription">Showing a Map created with MapVina. Scroll by dragging two fingers. Zoom by pinching two fingers.</string>
+    <string name="mapvina_attributionsDialogTitle">MapVina Android</string>
+    <string name="mapvina_attributionErrorNoBrowser">No web browser installed on device, can\'t open web page.</string>
+    <string name="mapvina_offline_error_region_definition_invalid">Provided OfflineRegionDefinition doesn\'t fit the world bounds: %s</string>
+</resources>

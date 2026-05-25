@@ -1,0 +1,7 @@
+#
+# Makefile for FreeType2 link library using gcc 4.0.3 from the
+# AmigaOS4 SDK
+#
+
+
+# Copyright (C) 2005-2024 by

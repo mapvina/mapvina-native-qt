@@ -1,0 +1,8 @@
+diff --git a/DevIL/src-ILU/include/ilu_error/ilu_err-french.h b/DevIL/src-ILU/include/ilu_error/ilu_err-french.h
+index d3b280d..445440e 100644
+--- a/DevIL/src-ILU/include/ilu_error/ilu_err-french.h
++++ b/DevIL/src-ILU/include/ilu_error/ilu_err-french.h
+@@ -17,19 +17,19 @@
+ #include "ilu_internal.h"
+ 
+ ILconst_string iluErrorStringsFrench[IL_FILE_READ_ERROR - IL_INVALID_ENUM + 1] = {

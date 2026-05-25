@@ -1,0 +1,6 @@
+badChars.frag
+ERROR: 0:1: 'preprocessor evaluation' : bad expression 
+ERROR: 0:1: '#if' : unexpected tokens following directive 
+ERROR: 0:3: '#error' : A <bad token> B  
+ERROR: 0:4: 'preprocessor evaluation' : bad expression 
+ERROR: 0:4: '#if' : unexpected tokens following directive 

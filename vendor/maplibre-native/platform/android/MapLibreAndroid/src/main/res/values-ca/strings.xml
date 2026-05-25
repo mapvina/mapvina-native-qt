@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mapvina_compassContentDescription">Brúixola del mapa. Activa per restablir la rotació del mapa al Nord.</string>
+    <string name="mapvina_attributionsIconContentDescription">Icona d’atribució. Activa per mostrar el diàleg de l’atribució.</string>
+    <string name="mapvina_myLocationViewContentDescription">Vista de posició. Mostra la teva posició al mapa.</string>
+    <string name="mapvina_mapActionDescription">Mostrant un mapa creat amb MapVina. Desplaça’t arrossegant amb dos dits. Fes zoom pessigant amb dos dits.</string>
+    <string name="mapvina_attributionsDialogTitle">MapVina Android</string>
+    <string name="mapvina_offline_error_region_definition_invalid">La OfflineRegionDefinition proporcionada no encaixa amb els límits del món: %s</string>
+
+    </resources>

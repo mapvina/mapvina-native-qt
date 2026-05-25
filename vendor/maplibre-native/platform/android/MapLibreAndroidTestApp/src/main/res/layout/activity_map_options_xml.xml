@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.options.MapOptionsXmlActivity">
+
+    <com.mapvina.android.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:mapvina_apiBaseUri="https://api.mapvina.com"
+        app:mapvina_cameraBearing="0.0"
+        app:mapvina_cameraPitchMax="90.0"
+        app:mapvina_cameraPitchMin="0.0"
+        app:mapvina_cameraTargetLat="42.31230486601532"
+        app:mapvina_cameraTargetLng="64.63967338936439"
+        app:mapvina_cameraTilt="0.0"
+        app:mapvina_cameraZoom="3.9"
+        app:mapvina_cameraZoomMax="26.0"
+        app:mapvina_cameraZoomMin="2.0"
+        app:mapvina_localIdeographFontFamilies="@array/array_local_ideograph_family_test"
+        app:mapvina_localIdeographFontFamily="Droid Sans"
+        app:mapvina_uiCompass="true"
+        app:mapvina_uiCompassFadeFacingNorth="true"
+        app:mapvina_uiCompassGravity="top|end"
+        app:mapvina_uiDoubleTapGestures="true"
+        app:mapvina_uiHorizontalScrollGestures="true"
+        app:mapvina_uiRotateGestures="true"
+        app:mapvina_uiScrollGestures="true"
+        app:mapvina_uiTiltGestures="true"
+        app:mapvina_uiZoomGestures="true" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

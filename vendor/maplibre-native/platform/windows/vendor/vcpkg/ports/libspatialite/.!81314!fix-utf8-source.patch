@@ -1,0 +1,8 @@
+diff --git a/src/srsinit/epsg_inlined_21.c b/src/srsinit/epsg_inlined_21.c
+index 94aa9d4..457b38a 100644
+--- a/src/srsinit/epsg_inlined_21.c
++++ b/src/srsinit/epsg_inlined_21.c
+@@ -619,9 +619,9 @@ initialize_epsg_21 (int filter, struct epsg_defs **first, struct epsg_defs **las
+     add_srs_wkt (p, 27,
+         "lic, Chad, Chile, China, Christmas Island, Cocos (Keelin");
+     add_srs_wkt (p, 28,

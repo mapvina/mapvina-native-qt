@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="mapvina_LocationComponent">
+    <item name="mapvina_foregroundDrawable">@drawable/mapvina_user_icon</item>
+    <item name="mapvina_backgroundDrawable">@drawable/mapvina_user_stroke_icon</item>
+    <item name="mapvina_bearingDrawable">@drawable/mapvina_user_bearing_icon</item>
+    <item name="mapvina_gpsDrawable">@drawable/mapvina_user_puck_icon</item>
+
+    <item name="mapvina_foregroundDrawableStale">@drawable/mapvina_user_icon_stale</item>
+    <item name="mapvina_backgroundDrawableStale">@drawable/mapvina_user_stroke_icon</item>
+
+    <item name="mapvina_accuracyAlpha">0.15</item>
+    <item name="mapvina_accuracyColor">@color/mapvina_location_layer_blue</item>
+
+    <item name="mapvina_elevation">12dp</item>
+
+    <item name="mapvina_enableStaleState">true</item>
+    <item name="mapvina_staleStateTimeout">30000</item>
+
+    <!-- Location icon padding -->
+    <item name="mapvina_iconPaddingLeft">0</item>
+    <item name="mapvina_iconPaddingTop">0</item>
+    <item name="mapvina_iconPaddingRight">0</item>
+    <item name="mapvina_iconPaddingBottom">0</item>
+
+    <!-- Location icon scale based on map zoom levels -->
+    <item name="mapvina_maxZoomIconScale">1</item>
+    <item name="mapvina_minZoomIconScale">0.6</item>
+
+    <!-- Camera tracking settings -->
+    <item name="mapvina_trackingGesturesManagement">false</item>
+    <item name="mapvina_trackingInitialMoveThreshold">@dimen/mapvina_locationComponentTrackingInitialMoveThreshold</item>
+    <item name="mapvina_trackingMultiFingerMoveThreshold">@dimen/mapvina_locationComponentTrackingMultiFingerMoveThreshold</item>
+
+    <!-- Location pulsing circle -->
+    <item name="mapvina_pulsingLocationCircleEnabled">false</item>
+    <item name="mapvina_pulsingLocationCircleFadeEnabled">true</item>
+    <item name="mapvina_pulsingLocationCircleColor">@color/mapvina_location_layer_blue</item>
+    <item name="mapvina_pulsingLocationCircleDuration">2300</item>
+    <item name="mapvina_pulsingLocationCircleRadius">35</item>
+    <item name="mapvina_pulsingLocationCircleAlpha">0.4</item>
+    <item name="mapvina_pulsingLocationCircleInterpolator">decelerate</item>
+
+  </style>
+</resources>

@@ -1,0 +1,8 @@
+module MapVina.Location
+linktarget QMapVina::PluginQmlLocation
+plugin @MLN_QT_QML_PLUGIN_LOCATION@
+classname MapVinaQmlLocationModule
+typeinfo @MLN_QT_QML_PLUGIN_LOCATION@.qmltypes
+prefer :/MapVina/Location/
+depends QtQuick
+depends QtLocation

@@ -1,0 +1,120 @@
+{
+  "version": 6,
+  "include": ["common.json"],
+  "configurePresets": [
+    {
+      "name": "WASM",
+      "displayName": "WASM configuration using Qt6",
+      "generator": "Ninja",
+      "binaryDir": "${sourceParentDir}/build/qt6-WASM",
+      "toolchainFile": "$penv{QT_ROOT_DIR}/lib/cmake/Qt6/qt.toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_POLICY_VERSION_MINIMUM": "3.19",
+        "MLN_WITH_OPENGL": "ON",
+        "MLN_QT_WITH_LOCATION": "OFF",
+        "MLN_QT_WITH_RENDERER_DEBUGGING": "OFF"
+      }
+    },
+    {
+      "name": "WASM-ccache",
+      "displayName": "WASM configuration using Qt6 and ccache",
+      "inherits": ["dev", "ccache", "WASM"]
+    },
+    {
+      "name": "WASM-sccache",
+      "displayName": "WASM configuration using Qt6 and sccache",
+      "inherits": ["dev", "sccache", "WASM"]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "WASM",
+      "displayName": "WASM build using Qt6",
+      "configurePreset": "WASM"
+    },
+    {
+      "name": "WASM-ccache",
+      "displayName": "WASM build using Qt6 and ccache",
+      "configurePreset": "WASM-ccache"
+    },
+    {
+      "name": "WASM-sccache",
+      "displayName": "WASM build using Qt6 and sccache",
+      "configurePreset": "WASM-sccache"
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "WASM",
+      "displayName": "WASM package using Qt6",
+      "configurePreset": "WASM"
+    },
+    {
+      "name": "WASM-ccache",
+      "displayName": "WASM package using Qt6 and ccache",
+      "configurePreset": "WASM-ccache"
+    },
+    {
+      "name": "WASM-sccache",
+      "displayName": "WASM package using Qt6 and sccache",
+      "configurePreset": "WASM-sccache"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "WASM",
+      "displayName": "WASM workflow using Qt6",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "WASM"
+        },
+        {
+          "type": "build",
+          "name": "WASM"
+        },
+        {
+          "type": "package",
+          "name": "WASM"
+        }
+      ]
+    },
+    {
+      "name": "WASM-ccache",
+      "displayName": "WASM workflow using Qt6 and ccache",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "WASM-ccache"
+        },
+        {
+          "type": "build",
+          "name": "WASM-ccache"
+        },
+        {
+          "type": "package",
+          "name": "WASM-ccache"
+        }
+      ]
+    },
+    {
+      "name": "WASM-sccache",
+      "displayName": "WASM workflow using Qt6 and sccache",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "WASM-sccache"
+        },
+        {
+          "type": "build",
+          "name": "WASM-sccache"
+        },
+        {
+          "type": "package",
+          "name": "WASM-sccache"
+        }
+      ]
+    }
+  ]
+}

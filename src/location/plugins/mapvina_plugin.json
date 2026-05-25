@@ -1,0 +1,11 @@
+{
+  "Keys": ["mapvina", "mapvina"],
+  "Provider": "mapvina",
+  "Version": 100,
+  "Experimental": false,
+  "Features": [
+    "OnlineMappingFeature",
+    "OfflineMappingFeature",
+    "LocalizedMappingFeature"
+  ]
+}

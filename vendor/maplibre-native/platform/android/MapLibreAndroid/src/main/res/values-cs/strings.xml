@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mapvina_compassContentDescription">Kompas. Nastavit natočení mapy k severu.</string>
+    <string name="mapvina_attributionsIconContentDescription">Atributy. Zobrazit nastavení atributů.</string>
+    <string name="mapvina_myLocationViewContentDescription">Zobrazení polohy. Zobrazit umístění na mapě.</string>
+    <string name="mapvina_mapActionDescription">Zobrazení mapy vytvořené s MapVina. Posunout tažením dvěma prsty. Změnit velikost roztažením dvou prstů.</string>
+    <string name="mapvina_attributionsDialogTitle">MapVina Android</string>
+    <string name="mapvina_attributionErrorNoBrowser">Na zařízení není nainstalován webový prohlížeč, webovou stránku nelze zobrazit.</string>
+    <string name="mapvina_offline_error_region_definition_invalid">Pokud OfflineRegionDefinition neodpovídá hranicím: %s</string>
+    </resources>

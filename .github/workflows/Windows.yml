@@ -1,0 +1,280 @@
+name: Windows CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - "**"
+    paths-ignore:
+      - ".gitignore"
+      - "README.md"
+      - "docs/**"
+      # ignore CI for other platforms
+      - ".github/FUNDING.yml"
+      - ".github/actions/**"
+      - ".github/workflows/Android.yml"
+      - ".github/workflows/CI-cache-cleanup.yml"
+      - ".github/workflows/docs-test.yml"
+      - ".github/workflows/gh-pages-docs.yml"
+      - ".github/workflows/iOS.yml"
+      - ".github/workflows/Linux.yml"
+      - ".github/workflows/macOS.yml"
+      - ".github/workflows/source-tarball.yml"
+      - ".github/workflows/WASM.yml"
+      - "cmake/presets/Android.json"
+      - "cmake/presets/iOS.json"
+      - "cmake/presets/Linux.json"
+      - "cmake/presets/macOS.json"
+      - "cmake/presets/WASM.json"
+
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".gitignore"
+      - "README.md"
+      - "docs/**"
+      # ignore CI for other platforms
+      - ".github/FUNDING.yml"
+      - ".github/actions/**"
+      - ".github/workflows/Android.yml"
+      - ".github/workflows/CI-cache-cleanup.yml"
+      - ".github/workflows/docs-test.yml"
+      - ".github/workflows/gh-pages-docs.yml"
+      - ".github/workflows/iOS.yml"
+      - ".github/workflows/Linux.yml"
+      - ".github/workflows/macOS.yml"
+      - ".github/workflows/source-tarball.yml"
+      - ".github/workflows/WASM.yml"
+      - "cmake/presets/Android.json"
+      - "cmake/presets/iOS.json"
+      - "cmake/presets/Linux.json"
+      - "cmake/presets/macOS.json"
+      - "cmake/presets/WASM.json"
+
+concurrency:
+  # cancel jobs on PRs only
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  id-token: write # needed for AWS
+
+jobs:
+  build-and-test:
+    name: Build (Qt${{ matrix.qt_version }}, ${{ matrix.renderer }}, ${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - qt_version: 6.10.2
+            qt_arch: win64_msvc2022_64
+            runner: windows-2025
+            arch: msvc2022_64
+            compiler: x64
+            vsversion: 2022
+            preset: Windows-OpenGL-sccache
+            renderer: OpenGL
+          # - qt_version: 6.10.2
+          #   qt_arch: win64_msvc2022_arm64
+          #   runner: windows-11-arm
+          #   arch: msvc2022_arm64
+          #   compiler: arm64
+          #   vsversion: 2022
+          #   preset: Windows-OpenGL-sccache
+          #   renderer: OpenGL
+          - qt_version: 6.10.2
+            qt_arch: win64_msvc2022_64
+            runner: windows-2025
+            arch: msvc2022_64
+            compiler: x64
+            vsversion: 2022
+            preset: Windows-Vulkan-sccache
+            renderer: Vulkan
+          # - qt_version: 6.10.2
+          #   qt_arch: win64_msvc2022_arm64
+          #   runner: windows-11-arm
+          #   arch: msvc2022_arm64
+          #   compiler: arm64
+          #   vsversion: 2022
+          #   preset: Windows-Vulkan-sccache
+          #   renderer: Vulkan
+          - qt_version: 6.11.0
+            qt_arch: win64_msvc2022_64
+            runner: windows-2025
+            arch: msvc2022_64
+            compiler: x64
+            vsversion: 2022
+            preset: Windows-OpenGL-sccache
+            renderer: OpenGL
+          # - qt_version: 6.11.0
+          #   qt_arch: win64_msvc2022_arm64
+          #   runner: windows-11-arm
+          #   arch: msvc2022_arm64
+          #   compiler: arm64
+          #   vsversion: 2022
+          #   preset: Windows-OpenGL-sccache
+          #   renderer: OpenGL
+          - qt_version: 6.11.0
+            qt_arch: win64_msvc2022_64
+            runner: windows-2025
+            arch: msvc2022_64
+            compiler: x64
+            vsversion: 2022
+            preset: Windows-Vulkan-sccache
+            renderer: Vulkan
+          # - qt_version: 6.11.0
+          #   qt_arch: win64_msvc2022_arm64
+          #   runner: windows-11-arm
+          #   arch: msvc2022_arm64
+          #   compiler: arm64
+          #   vsversion: 2022
+          #   preset: Windows-Vulkan-sccache
+          #   renderer: Vulkan
+
+    env:
+      PRESET: ${{ matrix.preset }}
+
+    steps:
+      - name: Configure AWS Credentials
+        if: vars.OIDC_AWS_ROLE_TO_ASSUME
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-region: us-west-2
+          role-to-assume: ${{ vars.OIDC_AWS_ROLE_TO_ASSUME }}
+          role-session-name: ${{ github.run_id }}
+
+      - name: Install sccache
+        uses: MinoruSekine/setup-scoop@v4
+        with:
+          buckets: extras
+          apps: sccache
+
+      - name: Configure sccache
+        shell: bash
+        run: |
+          sccache --version
+
+          {
+            echo "SCCACHE_BUCKET=mapvina-native-sccache"
+            echo "SCCACHE_REGION=eu-central-1"
+          } >> "$GITHUB_ENV"
+          if [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
+            echo "AWS_SECRET_ACCESS_KEY not set; not uploading sccache cache to S3"
+            echo "SCCACHE_S3_NO_CREDENTIALS=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          path: source
+          fetch-depth: 0
+
+      - name: Setup submodules
+        shell: bash
+        run: |
+          cd source
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1 || true
+
+      - name: Download Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          aqtversion: ==3.3.*
+          aqtsource: git+https://github.com/miurahr/aqtinstall.git
+          version: ${{ matrix.qt_version }}
+          target: desktop
+          arch: ${{ matrix.qt_arch }}
+          modules: qtlocation qtpositioning
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: 3.30.x
+
+      - name: Setup ninja
+        uses: seanmiddleditch/gha-setup-ninja@v6
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.compiler }}
+          vsversion: ${{ matrix.vsversion }}
+
+      - name: Build
+        shell: bash
+        working-directory: source
+        run: |
+          cmake --workflow --preset ${PRESET}
+
+      - name: Install
+        shell: bash
+        run: |
+          mkdir install && cd install
+          tar xf ../build/qt6-Windows-${{ matrix.renderer }}/mapvina-native-qt_*.tar.bz2
+          mv mapvina-native-qt_* mapvina-native-qt
+
+      - name: Build QtQuick Example
+        shell: bash
+        working-directory: source/examples/quick
+        run: |
+          export QMapVina_DIR="$GITHUB_WORKSPACE/install/mapvina-native-qt"
+          cmake --workflow --preset default
+
+      - name: Build QtQuick Standalone Example
+        shell: bash
+        working-directory: source/examples/quick-standalone
+        run: |
+          export QMapVina_DIR="$GITHUB_WORKSPACE/install/mapvina-native-qt"
+          cmake --workflow --preset default
+
+      - name: Build QtWidgets Example
+        shell: bash
+        working-directory: source/examples/widgets
+        run: |
+          export QMapVina_DIR="$GITHUB_WORKSPACE/install/mapvina-native-qt"
+          cmake --workflow --preset default
+
+      - name: Show sccache stats
+        run: sccache --show-stats
+
+      - name: Upload installation
+        uses: actions/upload-artifact@v7
+        with:
+          name: Windows_${{ matrix.arch }}_${{ matrix.qt_version }}_${{ matrix.renderer }}
+          path: build/qt6-Windows-${{ matrix.renderer }}/mapvina-native-qt_*.tar.bz2
+
+      - name: Upload examples
+        uses: actions/upload-artifact@v7
+        with:
+          name: Windows_${{ matrix.arch }}_${{ matrix.qt_version }}_${{ matrix.renderer }}_examples
+          path: build/qt6-example-*/*.tar.bz2
+
+  release:
+    name: Release
+    if: github.ref_type == 'tag'
+    runs-on: windows-2025
+    needs: build-and-test
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        qt_version: [6.10.2, 6.11.0]
+        arch: [msvc2022_64, msvc2022_arm64]
+        renderer: [OpenGL, Vulkan]
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: Windows_${{ matrix.arch }}_${{ matrix.qt_version }}_${{ matrix.renderer }}
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: mapvina-native-qt_${{ github.ref_name }}_Qt${{ matrix.qt_version }}_Windows_${{ matrix.renderer }}.tar.bz2
+          allowUpdates: true
+          draft: true

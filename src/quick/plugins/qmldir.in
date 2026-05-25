@@ -1,0 +1,7 @@
+module MapVina
+linktarget QMapVina::PluginQml
+plugin @MLN_QT_QML_PLUGIN@
+classname MapVinaQmlModule
+typeinfo @MLN_QT_QML_PLUGIN@.qmltypes
+prefer :/MapVina/
+depends QtQuick

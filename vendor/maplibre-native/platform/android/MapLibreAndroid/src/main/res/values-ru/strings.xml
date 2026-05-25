@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mapvina_compassContentDescription">Компас. Активируйте, чтобы развернуть карту на север.</string>
+    <string name="mapvina_attributionsIconContentDescription">Значок атрибутов. Активируйте, чтобы показать диалог.</string>
+    <string name="mapvina_myLocationViewContentDescription">Местоположение. Отображает вашу позицию на карте.</string>
+    <string name="mapvina_mapActionDescription">Отображает карту, созданную при помощи MapVina. Пролистывайте двумя пальцами. Меняйте масштаб сведением пальцев.</string>
+    <string name="mapvina_attributionsDialogTitle">MapVina Android</string>
+    <string name="mapvina_attributionErrorNoBrowser">На устройстве нет веб-браузера, нельзя показать веб-страницу.</string>
+    <string name="mapvina_offline_error_region_definition_invalid">Запрошенный OfflineRegionDefinition не входит в допустимые границы: %s</string>
+    </resources>
